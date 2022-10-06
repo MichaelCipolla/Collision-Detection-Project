@@ -55,25 +55,47 @@ function updateCornerCoordinates(rect)
     rect['tr']['x'] = rect.x + rect.width
     rect['tr']['y'] = rect.y
 
-    magV = math.mag(rect.x, rect.y, rect.tr.x, rect.tr.y)
-    rect.tr.x = magV * math.cos(rect.angle) + rect.tr.x
-    rect.tr.y = magV * math.sin(rect.angle) + rect.tr.y
+    vec = {
+        ['x'] = 0,
+        ['y'] = 0,
+    }
 
+    magV = math.mag(rect.x, rect.y, rect.tr.x, rect.tr.y)
+    vec['x'] = rect.tr.x - rect.x
+    vec['y'] = rect.tr.y - rect.y
+
+    -- rect.tr.x = vec.x * math.cos(rect.angle)
+    -- rect.tr.y = vec.y * math.sin(rect.angle)
+
+    rect.tr.x = magV * math.cos(rect.angle) + rect.x
+    rect.tr.y = magV * math.sin(rect.angle) + rect.y
     -- bottom right corner
     rect['br']['x'] = rect.x + rect.width
     rect['br']['y'] = rect.y + rect.height
 
     magV = math.mag(rect.x, rect.y, rect.br.x, rect.br.y)
-    rect.br.x = magV * math.cos(rect.angle) + rect.br.x
-    rect.br.y = magV * math.sin(rect.angle) + rect.br.y
+    vec['x'] = rect.br.x - rect.x
+    vec['y'] = rect.br.y - rect.y
+
+    rect.br.x = magV * math.cos(rect.angle - (7/4) * math.pi) + rect.x
+    rect.br.y = magV * math.sin(rect.angle - (7/4) * math.pi) + rect.y
+
+    -- rect.br.x = vec.x * math.cos(rect.angle)
+    -- rect.br.y = vec.y * math.sin(rect.angle)
 
     --bottom left corner
     rect['bl']['x'] = rect.x
     rect['bl']['y'] = rect.y + rect.height
 
     magV = math.mag(rect.x, rect.y, rect.bl.x, rect.bl.y)
-    rect.bl.x = magV * math.cos(rect.angle) + rect.bl.x
-    rect.bl.y = magV * math.sin(rect.angle) + rect.bl.y
+    vec['x'] = rect.bl.x - rect.x
+    vec['y'] = rect.bl.y - rect.y
+
+    rect.bl.x = magV * math.cos(rect.angle - (3/2) * math.pi) + rect.x
+    rect.bl.y = magV * math.sin(rect.angle - (3/2) * math.pi) + rect.y
+
+    -- rect.bl.x = vec.x * math.cos(rect.angle)
+    -- rect.bl.y = vec.y * math.sin(rect.angle)
 end
 
 
@@ -94,6 +116,7 @@ function announceCornerCoordinates(element)
     love.graphics.print('Top Right: x:' .. tostring(element.tr.x) .. '\ty: ' .. tostring(element.tr.y), 1300, 10)
     love.graphics.print('Bot Left: x:' .. tostring(element.bl.x) .. '\ty: ' .. tostring(element.bl.y), 950, 50)
     love.graphics.print('Bot Right: x:' .. tostring(element.br.x) .. '\ty: ' .. tostring(element.br.y), 1300, 50)
+    love.graphics.print('Angle: ' .. tostring(element.angle), 1300, 100)
 end
 
 function love.draw() 
