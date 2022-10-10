@@ -129,85 +129,6 @@ function announceCornerCoordinates(element)
     love.graphics.print('Angle: ' .. tostring(element.angle), 1300, 100)
 end
 
-function logCoordinates(element)
-    -- print('\n\n\n')
-    print('Top Left: x:' .. tostring(element.x) .. '\ty: ' .. tostring(element.y))
-    print('Top Right: x:' .. tostring(element.v2.x) .. '\ty: ' .. tostring(element.v2.y))
-    print('Bot Left: x:' .. tostring(element.v4.x) .. '\ty: ' .. tostring(element.v4.y))
-    print('Bot Right: x:' .. tostring(element.v3.x) .. '\ty: ' .. tostring(element.v3.y))
-    print('Angle: ' .. tostring(element.angle), 1300, 100)
-    print('\n')
-
-    rect1 = playerRectangle
-    rect2 = obstacleRectangle
-
-    collision = true
-    for i = 0, 7 do
-        vNorm = ''
-        if i < 4 then
-            vNorm = norm(rect1['side' .. (i)])
-            
-        else
-            vNorm = norm(rect2['side' .. (i - 4)])
-        end
-
-        print('vNorm: <' .. vNorm.x .. ', ' .. vNorm.y .. '>')
-
-        maxMag1 = -1
-        maxMag2 = -1
-        
-        minMag1 = 100000
-        minMag2 = 100000
-
-        maxProj1 = ''
-        maxProj2 = ''
-
-        minProj1 = ''
-        minProj2 = ''
-        for j = 1, 4 do
-            vProj1 = project(rect1['v' .. j], vNorm)
-            vProj2 = project(rect2['v' .. j], vNorm)
-
-            vMag1 = magnitude(vProj1)
-            vMag2 = magnitude(vProj2)
-
-            if vMag1 > maxMag1 then
-                maxMag1 = vMag1
-                maxProj1 = vProj1
-            end
-
-            if vMag1 < minMag1 then
-                minMag1 = vMag1
-                minProj1 = vProj1
-            end
-
-            if vMag2 > maxMag2 then
-                maxMag2 = vMag2
-                maxProj2 = vProj2
-            end
-
-            if vMag2 < minMag2 then
-                minMag2 = vMag2
-                minProj2 = vProj2
-            end
-        end
-
-        if (magnitude(maxProj2) < magnitude(minProj1)) or (magnitude(maxProj1) < magnitude(minProj2)) then
-            print('\n')
-            print('vNorm: <' .. vNorm.x .. ', ' .. vNorm.y .. '>')
-            print('maxProj1: <' .. maxProj1.x .. ', ' .. maxProj1.y .. '>')
-            print('minProj1: <' .. minProj1.x .. ', ' .. minProj1.y .. '>')
-            print('maxProj2: <' .. maxProj2.x .. ', ' .. maxProj2.y .. '>')
-            print('minProj2: <' .. minProj2.x .. ', ' .. minProj2.y .. '>')
-    
-            print('maxMag1: ' .. maxMag1 .. '\t' .. 'minMag1: ' .. minMag1)
-            print('maxMag2: ' .. maxMag2 .. '\t' .. 'minMag2: ' .. minMag2)
-            print('\n')
-        end
-    end
-end
-
-
 function love.draw() 
     love.graphics.clear(40/255, 45/255, 52/255, 255/255)
 
@@ -221,10 +142,6 @@ function love.keypressed(key)
     if key == 'escape' then
         -- the function LÖVE2D uses to quit the application
         love.event.quit()
-    end
-
-    if key == 'space' then
-        logCoordinates(playerRectangle)
     end
 end
 
