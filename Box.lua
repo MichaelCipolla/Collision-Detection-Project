@@ -68,10 +68,10 @@ function Box:update(dt)
     self.v4.y = magV * math.sin(self.angle - (3/2) * math.pi) + self.y
 
 
-    self['side3'] = sub(self.v4, self.v1)
-    self['side1'] = sub(self.v3, self.v2)
-    self['side2'] = sub(self.v3, self.v4)
     self['side0'] = sub(self.v2, self.v1)
+    self['side1'] = sub(self.v3, self.v2)
+    self['side2'] = sub(self.v4, self.v3)
+    self['side3'] = sub(self.v1, self.v4)
 end
 
 function drawRotatedRectangle(mode, x, y, width, height, angle)

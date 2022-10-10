@@ -73,15 +73,85 @@ function determineCollision(rect1, rect2)
     collision = true
     for i = 0, 7 do
         vNorm = ''
-
         if i < 4 then
             vNorm = norm(rect1['side' .. (i)])
             
         else
             vNorm = norm(rect2['side' .. (i - 4)])
         end
+
+        maxProj1 = null
+        maxProj2 = null
+        minProj1 = null
+        minProj2 = null
+
+        for j = 1, 4 do
+            vProj1 = (rect1['v' .. j].x * vNorm.x) + (rect1['v' .. j].y * vNorm.y)
+            vProj2 = (rect2['v' .. j].x * vNorm.x) + (rect2['v' .. j].y * vNorm.y)
+
+            if maxProj1 == null then
+                minProj1 = vProj1
+                maxProj1 = vProj1
+            else
+                minProj1 = math.min(minProj1, vProj1)
+                maxProj1 = math.max(maxProj1, vProj1)
+            end
+
+            if maxProj2 == null then
+                minProj2 = vProj2
+                maxProj2 = vProj2
+            else
+                minProj2 = math.min(minProj2, vProj2)
+                maxProj2 = math.max(maxProj2, vProj2)
+            end
+        end
+        if (maxProj2 < minProj1) or (maxProj1 < minProj2) then
+            collision = false
+        end
+    end
+    if collision == true then
+        rect1.color.R = 1
+        rect1.color.G = 0
+        rect1.color.B = 0
+    else
+        rect1.color.R = 0
+        rect1.color.G = 1
+        rect1.color.B = 0
+    end
+end
+
+function announceCornerCoordinates(element)
+    love.graphics.setColor(0, 1, 0, 1)
+    love.graphics.print('Top Left: x:' .. tostring(element.x) .. '\ty: ' .. tostring(element.y), 950, 10)
+    love.graphics.print('Top Right: x:' .. tostring(element.v2.x) .. '\ty: ' .. tostring(element.v2.y), 1300, 10)
+    love.graphics.print('Bot Left: x:' .. tostring(element.v4.x) .. '\ty: ' .. tostring(element.v4.y), 950, 50)
+    love.graphics.print('Bot Right: x:' .. tostring(element.v3.x) .. '\ty: ' .. tostring(element.v3.y), 1300, 50)
+    love.graphics.print('Angle: ' .. tostring(element.angle), 1300, 100)
+end
+
+function logCoordinates(element)
+    -- print('\n\n\n')
+    print('Top Left: x:' .. tostring(element.x) .. '\ty: ' .. tostring(element.y))
+    print('Top Right: x:' .. tostring(element.v2.x) .. '\ty: ' .. tostring(element.v2.y))
+    print('Bot Left: x:' .. tostring(element.v4.x) .. '\ty: ' .. tostring(element.v4.y))
+    print('Bot Right: x:' .. tostring(element.v3.x) .. '\ty: ' .. tostring(element.v3.y))
+    print('Angle: ' .. tostring(element.angle), 1300, 100)
+    print('\n')
+
+    rect1 = playerRectangle
+    rect2 = obstacleRectangle
+
+    collision = true
+    for i = 0, 7 do
+        vNorm = ''
+        if i < 4 then
+            vNorm = norm(rect1['side' .. (i)])
             
-        cNorm = 'side' .. i
+        else
+            vNorm = norm(rect2['side' .. (i - 4)])
+        end
+
+        print('vNorm: <' .. vNorm.x .. ', ' .. vNorm.y .. '>')
 
         maxMag1 = -1
         maxMag2 = -1
@@ -123,35 +193,23 @@ function determineCollision(rect1, rect2)
         end
 
         if (magnitude(maxProj2) < magnitude(minProj1)) or (magnitude(maxProj1) < magnitude(minProj2)) then
-            collision = false
+            print('\n')
+            print('vNorm: <' .. vNorm.x .. ', ' .. vNorm.y .. '>')
+            print('maxProj1: <' .. maxProj1.x .. ', ' .. maxProj1.y .. '>')
+            print('minProj1: <' .. minProj1.x .. ', ' .. minProj1.y .. '>')
+            print('maxProj2: <' .. maxProj2.x .. ', ' .. maxProj2.y .. '>')
+            print('minProj2: <' .. minProj2.x .. ', ' .. minProj2.y .. '>')
+    
+            print('maxMag1: ' .. maxMag1 .. '\t' .. 'minMag1: ' .. minMag1)
+            print('maxMag2: ' .. maxMag2 .. '\t' .. 'minMag2: ' .. minMag2)
+            print('\n')
         end
-    end
-    if collision == true then
-        rect1.color.R = 1
-        rect1.color.G = 0
-        rect1.color.B = 0
-    else
-        rect1.color.R = 0
-        rect1.color.G = 1
-        rect1.color.B = 0
     end
 end
 
-function announceCornerCoordinates(element)
-    love.graphics.setColor(0, 1, 0, 1)
-    love.graphics.print('Top Left: x:' .. tostring(element.x) .. '\ty: ' .. tostring(element.y), 950, 10)
-    love.graphics.print('Top Right: x:' .. tostring(element.v2.x) .. '\ty: ' .. tostring(element.v2.y), 1300, 10)
-    love.graphics.print('Bot Left: x:' .. tostring(element.v4.x) .. '\ty: ' .. tostring(element.v4.y), 950, 50)
-    love.graphics.print('Bot Right: x:' .. tostring(element.v3.x) .. '\ty: ' .. tostring(element.v3.y), 1300, 50)
-    love.graphics.print('Angle: ' .. tostring(element.angle), 1300, 100)
-end
 
 function love.draw() 
     love.graphics.clear(40/255, 45/255, 52/255, 255/255)
-    -- love.graphics.setColor(70/255, 205/255, 43/255)
-    -- drawRotatedRectangle('fill', playerRectangle.x, playerRectangle.y, playerRectangle.width, playerRectangle.height, playerRectangle.angle)
-    -- love.graphics.setColor(255/255, 255/255, 0/255)
-    -- drawRotatedRectangle('fill', obstacleRectangle.x, obstacleRectangle.y, obstacleRectangle.width, obstacleRectangle.height, obstacleRectangle.angle)
 
     playerRectangle:render()
     obstacleRectangle:render()
@@ -163,6 +221,10 @@ function love.keypressed(key)
     if key == 'escape' then
         -- the function LÖVE2D uses to quit the application
         love.event.quit()
+    end
+
+    if key == 'space' then
+        logCoordinates(playerRectangle)
     end
 end
 
