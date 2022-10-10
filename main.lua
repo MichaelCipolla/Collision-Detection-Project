@@ -4,8 +4,8 @@ Class = require 'class'
 
 require 'Box'
 
-WINDOW_WIDTH = 1920 / 1.3
-WINDOW_HEIGHT = 1080 / 1.3
+WINDOW_WIDTH = 1920
+WINDOW_HEIGHT = 1080 
 
 function love.load () 
     -- love.graphics.setColor(79/255, 157/255, 202/255)
